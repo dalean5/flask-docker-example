@@ -21,4 +21,6 @@ USER appuser
 
 EXPOSE 8000
 
-CMD ["python", "app.py"]
+RUN chmod +x /app/bin/entrypoint.sh
+
+ENTRYPOINT ["sh", "/app/bin/entrypoint.sh"]
