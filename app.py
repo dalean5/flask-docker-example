@@ -1,5 +1,9 @@
-from flask import Flask
+import os
+from flask import Flask, render_template, request, url_for
+from werkzeug.utils import redirect, secure_filename
 from config import get_env_variable
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 from logging.config import dictConfig
 
@@ -24,13 +28,23 @@ app.config.from_object(get_env_variable('APP_SETTINGS'))
 
 @app.route('/')
 def homepage():
-    return "<h1>Home page</h1><p>Welcome to my simple Flask app</p>"
+    return render_template("index.html")
 
 
-@app.route('/<name>/')
-def echo_name(name):
-    return "<h1>Echo name</h1><p>Hi, {}!</p>".format(name)
+@app.route('/<echo>/')
+def echo_name(echo):
+    return render_template("echo.html", echo=echo)
 
+
+@app.route('/file-upload/', methods=['GET', 'HEAD', 'OPTIONS', 'POST'])
+def upload_file():
+    if request.method == 'GET':
+        return render_template("file-upload.html")
+    elif request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(basedir, 'uploads', filename))
+        return redirect(url_for('upload_file'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
