@@ -14,8 +14,7 @@ RUN python -m pip install -r requirements.txt
 
 COPY . .
 
-# Create upload directory
-RUN mkdir  /app/uploads
+RUN mkdir /app/uploads
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
 RUN useradd appuser && chown -R appuser /app
@@ -24,6 +23,6 @@ USER appuser
 
 EXPOSE 8000
 
-RUN chmod +x /app/bin/entrypoint.sh
+RUN chmod +x /app/scripts/entrypoint.sh
 
 ENTRYPOINT ["sh", "/app/bin/entrypoint.sh"]
